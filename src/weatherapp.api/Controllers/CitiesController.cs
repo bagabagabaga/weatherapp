@@ -25,9 +25,9 @@ namespace WeatherApp.Controllers
       
         // GET: api/Cities?name=nameofCity
         [HttpGet]
-        public async Task<IList<City>> GetCities(string name, int citiesCount = 5)
+        public List<City> GetCities(string name, int citiesCount = 5)
         {
-            var cities = await _citiesService.GetCities(name, citiesCount);
+            var cities =  _citiesService.GetCities(name, citiesCount);
             return cities;
         }
     }

@@ -25,10 +25,11 @@ namespace WeatherApp
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ICitiesService, CitiesService>();
-            services.AddScoped<IWeatherService, WeatherService>();
-           
 
-            services.AddHttpClient();
+            services.AddHttpClient<IWeatherService, WeatherService>();
+
+            services.AddOptions();
+            services.Configure<WeatherAppConfig>(Configuration.GetSection("WeatherAppConfig"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

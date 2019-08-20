@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using WeatherApp.Models;
 using WeatherApp.Services;
 
 namespace WeatherApp.Controllers
@@ -17,10 +19,10 @@ namespace WeatherApp.Controllers
 
 
         [HttpGet("forecast")]
-        public async Task<ActionResult<string>> GetAsync(string cityId, string zipCode)
+        public async Task<List<AveragedDayForecast>> GetAsync(string cityId, string zipCode)
         {
             var forecast = await _weatherService.GetForecast(cityId, zipCode);
-            return forecast.ToString();
+            return forecast;
         }
     }
 }

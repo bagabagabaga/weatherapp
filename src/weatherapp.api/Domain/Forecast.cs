@@ -7,12 +7,10 @@ namespace WeatherApp.Domain
 {
     public class Forecast
     {
-        public long Id { get; set; }
-        public DateTime Date { get; set; }
-        public float Temperature { get; set; }
-        public float WindSpeed { get; set; }
-        public float Humidity { get; set; }
-        public string Icon { get; set; }
-        public string Description { get; set; }
+        public int dt { get; set; }
+        public WeatherConditions  main { get; set; }
+        public List<WeatherDescription> weather { get; set; }
+        public WindStats wind { get; set; }
+        public string dt_txt { get; set; }
     }
 }

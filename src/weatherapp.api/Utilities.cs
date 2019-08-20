@@ -13,7 +13,7 @@ namespace WeatherApp
     {
         public static List<City> GetGermanCities()
         {
-            var pathToCities = GetAppConfig()["SeedFilePath"]; 
+            var pathToCities = GetAppConfig()["WeatherAppConfig:SeedFilePath"];
             var allCities = File.ReadAllText(pathToCities);
             if (allCities != null)
             {

@@ -17,7 +17,7 @@ namespace WeatherApp.Services
             _dbContext = dbContext;
         }
 
-        public async Task<List<City>> GetCities(string name, int citiesCount)
+        public List<City> GetCities(string name, int citiesCount)
         {
             var cities = _dbContext.Cities
                 .DistinctBy(x=>x.Name)
