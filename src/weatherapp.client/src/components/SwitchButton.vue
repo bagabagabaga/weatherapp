@@ -1,14 +1,10 @@
 // Based on https://codepen.io/iamturner/pen/GZVoXo
 
 <template>
- 
-    
-        <div class="switch-button" id="button-16">
-          <input type="checkbox" class="checkbox">
-          <div class="knobs"></div>
-        </div>
-
-
+  <div class="switchToggle">
+    <input type="checkbox" id="switch" />
+    <label for="switch">Toggle</label>
+  </div>
 </template>
 
 
@@ -23,66 +19,78 @@ export default {
 
 
 <style scoped>
-.switch-button
-{
-    position: relative;
-    top: 50%;
-    width: 74px;
-    height: 36px;
-    margin: -20px auto 0 auto;
-    overflow: hidden;
+/* https://bootsnipp.com/snippets/j6k6b */
+.switchToggle input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  position: absolute;
 }
 
-.checkbox
-{
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 3;
+.switchToggle label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 70px;
+  max-width: 70px;
+  height: 30px;
+  background: #1e4863;
+  display: block;
+  border-radius: 100px;
+  position: relative;
 }
 
-/* Button 16 */
-#button-16 .knobs:before
-{
-    content: '°C';
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 30px;
-    height: 10px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-    color:white;
-    line-height: 1;
-    height:100%;
-    padding: 9px 4px;
-    background-color: #9ed3df;
-    border-radius: 2px;
-    transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+.switchToggle label:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
 }
 
-#button-16 .checkbox:active + .knobs:before
-{
-    width: 46px;
+.switchToggle input:checked + label,
+.switchToggle input:checked + input + label {
+  background: #3e98d3;
 }
 
-#button-16 .checkbox:checked:active + .knobs:before
-{
-    margin-left: -26px;
+.switchToggle input + label:before,
+.switchToggle input + input + label:before {
+  content: "°F";
+  position: absolute;
+  top: 5px;
+  left: 35px;
+  width: 26px;
+  height: 26px;
+  border-radius: 90px;
+  transition: 0.3s;
+  text-indent: 0;
+  color: #fff;
 }
-
-#button-16 .checkbox:checked + .knobs:before
-{
-    content: '°F';
-    left: 42px;
-    color:white;
-    background-color: #5eb5c9;
-    height: 100%;
+.switchToggle input:checked + label:before,
+.switchToggle input:checked + input + label:before {
+  content: "°C";
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 90px;
+  transition: 0.3s;
+  text-indent: 0;
+  color: #fff;
+}
+.switchToggle input:checked + label:after,
+.switchToggle input:checked + input + label:after {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+.switchToggle label:active:after {
+  width: 60px;
+}
+.toggle-switchArea {
+  margin: 10px 0 10px 0;
 }
 </style>

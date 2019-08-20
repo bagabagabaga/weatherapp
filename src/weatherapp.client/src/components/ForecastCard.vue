@@ -1,19 +1,19 @@
 <template>
   <div class="card my-card">
     <div class="card-content">
-      <div class="media">
-        <div class="media-left">
+      <div class="row">
+        <div class="col">
           <div class="weather-icon">
             <i class="fas fa-poo-storm"></i>
           </div>
         </div>
-        <div class="media-content">
-          <h1>{{day}}</h1>
+        <div class="col">
+          <span>{{day}}</span>
           <p>24th september 2019</p>
         </div>
       </div>
 
-      <div class="columns">
+      <div class="row">
         <MeterologicalConditionCard />
         <MeterologicalConditionCard />
         <MeterologicalConditionCard />

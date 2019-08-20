@@ -1,10 +1,10 @@
 <template>
-  <div class="column">
+  <div class="col">
     <div class="card-content">
       <div class="media">
         <div class="media-content">
           <i class="fas fa-poo-storm"></i>
-          <p>24th september 2019</p>
+          <p>24th</p>
         </div>
       </div>
     </div>

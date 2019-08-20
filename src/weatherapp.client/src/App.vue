@@ -1,21 +1,21 @@
 <template>
   <div id="app">
-    <div class="columns">
+    <div class="col">
       <SearchBar />
     </div>
     <div id="change-temperature-scale">
       <SwitchButton />
     </div>
 
-    <div class="columns">
-      <ForecastCard class="column is-7" day="Today" />
-      <ForecastCard class="column" day="Tomorrow" />
+    <div class="row">
+      <ForecastCard class="col md-5" day="Today" />
+      <ForecastCard class="col md-3" day="Tomorrow" />
     </div>
-    <div class="columns">
-      <ForecastCard class="column is-3" day="Tuesday" />
-      <ForecastCard class="column is-3" day="Thursday" />
-      <ForecastCard class="column is-3" day="Wednesday" />
-      <ForecastCard class="column is-3" day="Monday" />
+    <div class="row">
+      <ForecastCard class="col" day="Tuesday" />
+      <ForecastCard class="col" day="Thursday" />
+      <ForecastCard class="col" day="Wednesday" />
+      <ForecastCard class="col" day="Monday" />
     </div>
   </div>
 </template>
