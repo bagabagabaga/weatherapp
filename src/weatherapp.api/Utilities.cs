@@ -11,6 +11,7 @@ namespace WeatherApp
 {
     public static class Utilities
     {
+
         public static List<City> GetGermanCities()
         {
             var pathToCities = GetAppConfig()["WeatherAppConfig:SeedFilePath"];

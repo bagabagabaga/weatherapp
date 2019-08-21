@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace WeatherApp.Domain
 {
     public class WindStats
     {
-        public double speed { get; set; }
-        public double deg { get; set; }
+        [JsonProperty(PropertyName = "speed")]
+        public double Speed { get; set; }
+
+        [JsonProperty(PropertyName = "deg")]
+        public double Degree { get; set; }
     }
 }

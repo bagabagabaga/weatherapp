@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace WeatherApp.Domain
 {
     public class WeatherDescription
     {
-        public string description { get; set; }
-        public string icon { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
+
+        [JsonProperty(PropertyName = "icon")]
+        public string Icon { get; set; }
     }
 }

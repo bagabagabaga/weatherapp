@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WeatherApp.Domain
 {
     public class Forecast
     {
-        public int dt { get; set; }
-        public WeatherConditions  main { get; set; }
-        public List<WeatherDescription> weather { get; set; }
-        public WindStats wind { get; set; }
-        public string dt_txt { get; set; }
+        [JsonProperty(PropertyName = "main")]
+        public WeatherConditions WeatherConditions { get; set; }
+
+        [JsonProperty(PropertyName = "weather")]
+        public List<WeatherDescription> WeatherDescription { get; set; }
+
+        [JsonProperty(PropertyName = "wind")]
+        public WindStats WindStats { get; set; }
+
+        [JsonProperty(PropertyName = "dt_txt")]
+        public string DateTimeText { get; set; }
     }
 }
