@@ -7,9 +7,10 @@
           id="ajax"
           label="name"
           track-by="code"
-          placeholder="Type to find a city"
+          placeholder="Type to search"
           open-direction="bottom"
           :options="cities"
+          :multiple="true"
           :searchable="true"
           :loading="isLoading"
           :internal-search="false"
@@ -106,7 +107,7 @@ export default {
         WeatherService.getWeather(
           this.selectedCities[0].id,
           this.postalCode
-        ).then(response => (this.weatherData = response));
+        ).then(response => this.$emit("weatherReceived", response));
       } else {
         this.isInputInvalid = true;
       }

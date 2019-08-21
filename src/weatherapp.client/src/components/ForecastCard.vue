@@ -9,14 +9,26 @@
         </div>
         <div class="col">
           <span>{{day}}</span>
-          <p>24th september 2019</p>
+          <p>{{date}}</p>
         </div>
       </div>
 
       <div class="row">
-        <MeterologicalConditionCard />
-        <MeterologicalConditionCard />
-        <MeterologicalConditionCard />
+        <MeterologicalConditionCard
+          class="col"
+          icon="fas fa-thermometer-half"
+          v-bind:value="forecast.averagedTemperature"
+        />
+        <MeterologicalConditionCard
+          class="col"
+          icon="fas fa-tint"
+          v-bind:value="forecast.averagedHumidity"
+        />
+        <MeterologicalConditionCard
+          class="col"
+          icon="fas fa-wind"
+          v-bind:value="forecast.averagedWind"
+        />
       </div>
     </div>
   </div>
@@ -31,7 +43,19 @@ export default {
     MeterologicalConditionCard
   },
   props: {
-    day: String
+    forecast: {}
+  },
+  computed: {
+    date: function() {
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      let date = new Date(this.forecast.date).toLocaleDateString("en", options);
+      return date;
+    },
+    day: function() {
+      return new Date(this.forecast.date).toLocaleDateString("en", {
+        weekday: "long"
+      });
+    }
   }
 };
 </script>

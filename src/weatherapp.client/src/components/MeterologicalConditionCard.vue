@@ -3,8 +3,8 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <i class="fas fa-poo-storm"></i>
-          <p>24th</p>
+          <i :class="icon"></i>
+          <p>{{value.toFixed(2)}}</p>
         </div>
       </div>
     </div>
@@ -15,7 +15,8 @@
 export default {
   name: "MeterologicalConditionCard",
   props: {
-    icon: String
+    icon: String,
+    value: Number
   }
 };
 </script>

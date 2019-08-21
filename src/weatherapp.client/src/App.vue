@@ -1,21 +1,19 @@
 <template>
   <div id="app">
     <div class="col">
-      <SearchBar />
+      <SearchBar v-on:weatherReceived="setWeather" />
     </div>
     <div id="change-temperature-scale">
       <SwitchButton />
     </div>
 
     <div class="row">
-      <ForecastCard class="col md-5" day="Today" />
-      <ForecastCard class="col md-3" day="Tomorrow" />
-    </div>
-    <div class="row">
-      <ForecastCard class="col" day="Tuesday" />
-      <ForecastCard class="col" day="Thursday" />
-      <ForecastCard class="col" day="Wednesday" />
-      <ForecastCard class="col" day="Monday" />
+      <ForecastCard
+        class="col-xs-12 col-md-4 col-sm-6"
+        v-for="(forecast, index) in weatherData"
+        v-bind:key="index"
+        v-bind:forecast="forecast"
+      />
     </div>
   </div>
 </template>
@@ -31,6 +29,18 @@ export default {
     SearchBar,
     ForecastCard,
     SwitchButton
+  },
+  data() {
+    return {
+      weatherData: [],
+      items: [{ message: "Foo", id: 1 }, { message: "Bar", id: 2 }]
+    };
+  },
+  methods: {
+    setWeather(data) {
+      this.weatherData = data;
+      console.log(data);
+    }
   }
 };
 </script>
