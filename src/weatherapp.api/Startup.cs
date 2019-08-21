@@ -31,6 +31,8 @@ namespace WeatherApp
             services.AddOptions();
             services.Configure<WeatherAppConfig>(Configuration.GetSection("WeatherAppConfig"));
 
+            services.AddMemoryCache();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

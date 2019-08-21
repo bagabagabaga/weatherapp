@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WeatherApp.Domain
 {
     public class FiveDayForecast
     {
-        public int cod { get; set; }
-        public List<Forecast> list { get; set; }
+        [JsonProperty(PropertyName = "cod")]
+        public int Code { get; set; }
+
+        [JsonProperty(PropertyName = "list")]
+        public List<Forecast> DailyForecastList { get; set; }
     }
 }

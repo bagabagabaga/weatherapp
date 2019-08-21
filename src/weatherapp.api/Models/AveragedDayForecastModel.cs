@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace WeatherApp.Models
 {
-    public class AveragedDayForecast
+    public class AveragedDayForecastModel
     {
-        public long Id { get; set; }
         public DateTime Date { get; set; }
         public double AveragedTemperature { get; set; }
         public double AveragedWind { get; set; }

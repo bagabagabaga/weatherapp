@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WeatherApp.Domain;
 using WeatherApp.Models;
 using WeatherApp.Services;
 
@@ -19,10 +20,34 @@ namespace WeatherApp.Controllers
 
 
         [HttpGet("forecast")]
-        public async Task<List<AveragedDayForecast>> GetAsync(string cityId, string zipCode)
+        public async Task<ActionResult<List<AveragedDayForecastModel>>> Get(string cityId, string zipCode)
         {
             var forecast = await _weatherService.GetForecast(cityId, zipCode);
-            return forecast;
+
+            if (forecast != null)
+            {
+                return forecast;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
+        [HttpPost("forecast")]
+        public async Task<ActionResult> Create(CityForecastInputModel model)
+        {
+            var cityForecast = await _weatherService.CreateCityForecast(model.CityName, model.Date, model.Humidity, model.Temperature);
+            return Ok();
+        }
+
+
+        [HttpGet("history")]
+        public async Task<ActionResult<List<CityForecast>>> GetHistory()
+        {
+            var forecastHistory = await _weatherService.GetForecastHistory();
+            return Ok(forecastHistory);
         }
     }
 }

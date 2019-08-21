@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace WeatherApp.Domain
 {
     public class WeatherConditions
     {
-        public double temp { get; set; }
-        public double pressure { get; set; }
-        public int humidity { get; set; }
+        [JsonProperty(PropertyName = "temp")]
+        public double Temperature { get; set; }
+
+        [JsonProperty(PropertyName = "pressure")]
+        public double Pressure { get; set; }
+
+        [JsonProperty(PropertyName = "humidity")]
+        public int Humidity { get; set; }
     }
 }
