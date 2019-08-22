@@ -18,5 +18,11 @@ export default {
                     return response.data
                 })
         }
+    },
+    getHistory() {
+        return axios.get("/weather/history")
+            .then(response => {
+                return response.data
+            })
     }
 }

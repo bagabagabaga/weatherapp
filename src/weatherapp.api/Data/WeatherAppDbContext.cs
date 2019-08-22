@@ -15,7 +15,8 @@ namespace WeatherApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Seed();
+           // modelBuilder.Seed();
+           //I'm commenting this out as seeding takes too long initially so I deleted the seed file
         }
     }
 }

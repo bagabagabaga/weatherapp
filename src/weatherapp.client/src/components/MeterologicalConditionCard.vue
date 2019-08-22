@@ -1,8 +1,8 @@
 <template>
   <div class="col">
     <div class="card-content">
-      <div class="media">
-        <div class="media-content">
+      <div>
+        <div>
           <i :class="icon"></i>
           <p>{{value.toFixed(2)}}</p>
         </div>

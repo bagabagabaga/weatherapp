@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col col-md-6">
+      <div class="col-xs-12 col-md-6 col-sm-6">
         <multiselect
           v-model="selectedCities"
           id="ajax"
@@ -14,8 +14,8 @@
           :searchable="true"
           :loading="isLoading"
           :internal-search="false"
-          :clear-on-select="false"
-          :close-on-select="false"
+          :clear-on-select="true"
+          :close-on-select="true"
           :options-limit="50"
           :max-height="400"
           :show-no-results="false"
@@ -38,7 +38,7 @@
           <span slot="noResult">Oops! No cities found.</span>
         </multiselect>
       </div>
-      <div class="col col-md-4">
+      <div class="col-xs-6 col-md-6 col-sm-4 p-2">
         <input
           class="form-control"
           placeholder="Postal Code"
@@ -46,11 +46,14 @@
           @keypress="isNumber($event)"
         />
       </div>
-      <button v-on:click="getWeatherData" class="btn btn-primary col col-md-2">
-        <i class="fas fa-umbrella"></i> Get Weather Data
-      </button>
     </div>
-
+    <div class="row">
+      <div class="col">
+        <button v-on:click="getWeatherData" class="btn btn-primary col col-md-2">
+          <i class="fas fa-umbrella"></i> Get Weather Data
+        </button>
+      </div>
+    </div>
     <b v-if="isInputInvalid" class="text-danger">Please find a valid city or type in a postal code.</b>
   </div>
 </template>
@@ -115,3 +118,20 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  padding: 5em;
+  background-color: #0a3354;
+}
+html,
+body {
+  height: 100%;
+  background-color: #0a3354 !important;
+}
+</style>

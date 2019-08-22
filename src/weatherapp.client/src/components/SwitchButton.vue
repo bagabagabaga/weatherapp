@@ -25,6 +25,7 @@ export default {
   width: 0;
   visibility: hidden;
   position: absolute;
+  margin: 0;
 }
 
 .switchToggle label {
@@ -34,7 +35,6 @@ export default {
   max-width: 70px;
   height: 30px;
   background: #1e4863;
-  display: block;
   border-radius: 100px;
   position: relative;
 }
