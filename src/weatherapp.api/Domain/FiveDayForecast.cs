@@ -10,5 +10,8 @@ namespace WeatherApp.Domain
 
         [JsonProperty(PropertyName = "list")]
         public List<Forecast> DailyForecastList { get; set; }
+
+        [JsonProperty(PropertyName = "city")]
+        public City City { get; set; }
     }
 }

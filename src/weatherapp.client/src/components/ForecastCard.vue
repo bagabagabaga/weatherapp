@@ -3,13 +3,8 @@
     <div class="card-content">
       <div class="row">
         <div class="col">
-          <div class="weather-icon">
-            <i class="fas fa-poo-storm"></i>
-          </div>
-        </div>
-        <div class="col">
-          <span>{{day}}</span>
-          <p>{{date}}</p>
+          <span class="font-weight-bold">{{day}}</span>
+          <p class="text-muted">{{date}} {{isFahrenheit}}</p>
         </div>
       </div>
 
@@ -43,7 +38,8 @@ export default {
     MeterologicalConditionCard
   },
   props: {
-    forecast: {}
+    forecast: Object,
+    isFahrenheit: Boolean
   },
   computed: {
     date: function() {
@@ -62,8 +58,9 @@ export default {
 
 <style scoped>
 .my-card {
+  border: 3px solid #343d4b;
   color: #c2ccd4;
-  background-color: #133a5b;
+  background-color: #222831;
 }
 .weather-icon {
   font-size: 3em;

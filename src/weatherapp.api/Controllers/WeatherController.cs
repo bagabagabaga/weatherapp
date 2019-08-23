@@ -20,13 +20,13 @@ namespace WeatherApp.Controllers
 
 
         [HttpGet("forecast")]
-        public async Task<ActionResult<List<AveragedDayForecastModel>>> Get(string cityId, string zipCode)
+        public async Task<ActionResult<WeatherForecastModel>> Get(string cityId, string zipCode)
         {
             var forecast = await _weatherService.GetForecast(cityId, zipCode);
 
             if (forecast != null)
             {
-                return forecast;
+                return Ok(forecast);
             }
             else
             {
@@ -35,17 +35,18 @@ namespace WeatherApp.Controllers
         }
 
 
-        [HttpPost("forecast")]
-        public async Task<ActionResult> Create(CityForecastInputModel model)
+        [HttpPost("history")]
+        public async Task<ActionResult> CreateHistory(CityForecastInputModel model)
         {
             var cityForecast = await _weatherService.CreateCityForecast(model.CityName, model.Date, model.Humidity, model.Temperature);
-            return Ok();
+            return Ok(model);
         }
 
 
         [HttpGet("history")]
         public async Task<ActionResult<List<CityForecast>>> GetHistory()
         {
+
             var forecastHistory = await _weatherService.GetForecastHistory();
             return Ok(forecastHistory);
         }

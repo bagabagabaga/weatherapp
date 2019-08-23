@@ -9,7 +9,7 @@ namespace WeatherApp.Services
 {
     public interface IWeatherService
     {
-        Task<List<AveragedDayForecastModel>> GetForecast(string city, string zipCode);
+        Task<WeatherForecastModel> GetForecast(string cityId, string zipCode);
         Task<CityForecast> CreateCityForecast(string cityName, DateTime date, double humidity, double temperature);
         Task<List<CityForecast>> GetForecastHistory();
     }

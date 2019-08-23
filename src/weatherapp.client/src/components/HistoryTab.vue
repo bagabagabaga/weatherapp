@@ -56,9 +56,11 @@ ul {
   height: 300px;
   list-style-type: none;
   padding: 0;
+  background-color: #ffffff;
 }
 li {
   border: 1px solid black;
+  background-color: #222831;
   margin: 0.5em;
 }
 </style>

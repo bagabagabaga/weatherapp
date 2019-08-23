@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row m-3">
       <div class="col-xs-12 col-md-6 col-sm-6">
         <multiselect
           v-model="selectedCities"
@@ -38,7 +38,7 @@
           <span slot="noResult">Oops! No cities found.</span>
         </multiselect>
       </div>
-      <div class="col-xs-6 col-md-6 col-sm-4 p-2">
+      <div class="col-xs-6 col-md-6 col-sm-4">
         <input
           class="form-control"
           placeholder="Postal Code"
@@ -74,8 +74,7 @@ export default {
       cities: [],
       isLoading: false,
       isInputInvalid: false,
-      postalCode: "",
-      weatherData: {}
+      postalCode: ""
     };
   },
   methods: {
@@ -106,9 +105,9 @@ export default {
       }
     },
     getWeatherData() {
-      if (this.selectedCities[0] || this.postalCode) {
+      if (this.selectedCities.length > 0 || this.postalCode) {
         WeatherService.getWeather(
-          this.selectedCities[0].id,
+          this.selectedCities.length > 0 ? this.selectedCities[0].id : "",
           this.postalCode
         ).then(response => this.$emit("weatherReceived", response));
       } else {

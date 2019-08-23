@@ -2,7 +2,7 @@
 
 <template>
   <div class="switchToggle">
-    <input type="checkbox" id="switch" />
+    <input type="checkbox" id="switch" v-on:change="changeSign" />
     <label for="switch">Toggle</label>
   </div>
 </template>
@@ -11,8 +11,10 @@
 <script>
 export default {
   name: "SwitchButton",
-  props: {
-    day: String
+  methods: {
+    changeSign() {
+      this.$emit("temperatureSignChanged");
+    }
   }
 };
 </script>
@@ -34,7 +36,7 @@ export default {
   width: 70px;
   max-width: 70px;
   height: 30px;
-  background: #1e4863;
+  background: #222831;
   border-radius: 100px;
   position: relative;
 }
@@ -46,14 +48,14 @@ export default {
   left: 2px;
   width: 26px;
   height: 26px;
-  background: #fff;
+  background: #343d4b;
   border-radius: 90px;
   transition: 0.3s;
 }
 
 .switchToggle input:checked + label,
 .switchToggle input:checked + input + label {
-  background: #3e98d3;
+  background: #fff;
 }
 
 .switchToggle input + label:before,
@@ -80,7 +82,7 @@ export default {
   border-radius: 90px;
   transition: 0.3s;
   text-indent: 0;
-  color: #fff;
+  color: #222831;
 }
 .switchToggle input:checked + label:after,
 .switchToggle input:checked + input + label:after {

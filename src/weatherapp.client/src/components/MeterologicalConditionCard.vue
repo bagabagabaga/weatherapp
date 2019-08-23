@@ -1,10 +1,10 @@
 <template>
-  <div class="col">
-    <div class="card-content">
-      <div>
+  <div class="p-2">
+    <div class="card meterological-condition-card">
+      <div class="card-content">
         <div>
           <i :class="icon"></i>
-          <p>{{value.toFixed(2)}}</p>
+          <p>{{value.toFixed(1)}}</p>
         </div>
       </div>
     </div>
@@ -20,3 +20,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.meterological-condition-card {
+  color: #343d4b;
+}
+</style>

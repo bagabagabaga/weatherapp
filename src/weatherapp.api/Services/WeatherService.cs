@@ -35,32 +35,7 @@ namespace WeatherApp.Services
             _dbContext = dbContext;
         }
 
-        public async Task<List<AveragedDayForecastModel>> GetForecast(string cityId, string zipCode)
-        {
-            //OpenWeatherMap: We recommend making calls to the API no more than one time every 10 minutes for one location
-            //let's cache the response for 10 minutes
-            List<AveragedDayForecastModel> averagedFiveDayForecast;
-            if (!_cache.TryGetValue(String.Format(WeatherCache, cityId, zipCode), out averagedFiveDayForecast))
-            {
-                string endpoint = GetEndpoint(cityId, zipCode);
-                var response = await _httpClient.GetAsync(endpoint);
-                if (response.IsSuccessStatusCode)
-                {
-                    var text = await response.Content.ReadAsStringAsync();
-                    var fiveDayForecast = JsonConvert.DeserializeObject<FiveDayForecast>(text);
-
-                    averagedFiveDayForecast = GetAveragedFiveDayForecast(fiveDayForecast);
-                    _cache.Set(string.Format(WeatherCache, cityId, zipCode), averagedFiveDayForecast, TimeSpan.FromMinutes(10));
-                }
-                else
-                {
-                    return null;
-                }
-
-            }
-
-            return averagedFiveDayForecast;
-        }
+        
 
 
         public async Task<CityForecast> CreateCityForecast(string cityName, DateTime date, double humidity, double temperature)
@@ -85,6 +60,43 @@ namespace WeatherApp.Services
             var history = await _dbContext.CityForecasts.ToListAsync();
             return history;
         }
+
+
+        public async Task<WeatherForecastModel> GetForecast(string cityId, string zipCode)
+        {
+            //OpenWeatherMap: We recommend making calls to the API no more than one time every 10 minutes for one location
+            //let's cache the response for 10 minutes
+            WeatherForecastModel weatherForecast;
+            if (!_cache.TryGetValue(String.Format(WeatherCache, cityId, zipCode), out weatherForecast))
+            {
+                string endpoint = GetEndpoint(cityId, zipCode);
+                var response = await _httpClient.GetAsync(endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var text = await response.Content.ReadAsStringAsync();
+                    var fiveDayForecast = JsonConvert.DeserializeObject<FiveDayForecast>(text);
+
+                    var averagedFiveDayForecast = GetAveragedFiveDayForecast(fiveDayForecast);
+
+                    weatherForecast = new WeatherForecastModel()
+                    {
+                        City = fiveDayForecast.City,
+                        Forecasts = averagedFiveDayForecast
+                    };
+
+                    _cache.Set(string.Format(WeatherCache, cityId, zipCode), weatherForecast, TimeSpan.FromMinutes(10));
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+
+            return weatherForecast;
+        }
+
+        
         #region PrivateMethods
 
 
@@ -126,7 +138,6 @@ namespace WeatherApp.Services
 
             return endpoint;
         }
-
         #endregion
     }
 }
