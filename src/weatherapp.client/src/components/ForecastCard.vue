@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col">
           <span class="font-weight-bold">{{day}}</span>
-          <p class="text-muted">{{date}} {{isFahrenheit}}</p>
+          <p class="text-muted">{{date}}</p>
         </div>
       </div>
 
@@ -12,17 +12,20 @@
         <MeterologicalConditionCard
           class="col"
           icon="fas fa-thermometer-half"
-          v-bind:value="forecast.averagedTemperature"
+          v-bind:value="temperature"
+          v-bind:sign="sign"
         />
         <MeterologicalConditionCard
           class="col"
           icon="fas fa-tint"
           v-bind:value="forecast.averagedHumidity"
+          sign="%"
         />
         <MeterologicalConditionCard
           class="col"
           icon="fas fa-wind"
           v-bind:value="forecast.averagedWind"
+          sign="㎧"
         />
       </div>
     </div>
@@ -51,6 +54,20 @@ export default {
       return new Date(this.forecast.date).toLocaleDateString("en", {
         weekday: "long"
       });
+    },
+    temperature: function() {
+      if (this.isFahrenheit) {
+        return ((this.forecast.averagedTemperature - 273.15) * 9) / 5 + 32;
+      } else {
+        return this.forecast.averagedTemperature - 273.15;
+      }
+    },
+    sign: function() {
+      if (this.isFahrenheit) {
+        return "°F";
+      } else {
+        return "°C";
+      }
     }
   }
 };

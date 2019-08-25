@@ -8,6 +8,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import axios from "axios";
 
+
 axios.defaults.baseURL = "https://localhost:8001/api";
 
 Vue.config.productionTip = false;

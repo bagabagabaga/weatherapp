@@ -12,6 +12,7 @@
           :options="cities"
           :multiple="true"
           :searchable="true"
+          class="is-danger"
           :loading="isLoading"
           :internal-search="false"
           :clear-on-select="true"
@@ -49,7 +50,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <button v-on:click="getWeatherData" class="btn btn-primary col col-md-2">
+        <button v-on:click="getWeatherData" class="btn btn-outline-light col col-md-2">
           <i class="fas fa-umbrella"></i> Get Weather Data
         </button>
       </div>
@@ -109,7 +110,9 @@ export default {
         WeatherService.getWeather(
           this.selectedCities.length > 0 ? this.selectedCities[0].id : "",
           this.postalCode
-        ).then(response => this.$emit("weatherReceived", response));
+        )
+          .then(response => this.$emit("weatherReceived", response))
+          .catch(error => this.$emit("errorFetchingWeather", error));
       } else {
         this.isInputInvalid = true;
       }
@@ -120,9 +123,6 @@ export default {
 
 <style scoped>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   padding: 5em;

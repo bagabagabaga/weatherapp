@@ -35,7 +35,7 @@ namespace WeatherApp.Services
             _dbContext = dbContext;
         }
 
-        
+
 
 
         public async Task<CityForecast> CreateCityForecast(string cityName, DateTime date, double humidity, double temperature)
@@ -69,41 +69,75 @@ namespace WeatherApp.Services
             WeatherForecastModel weatherForecast;
             if (!_cache.TryGetValue(String.Format(WeatherCache, cityId, zipCode), out weatherForecast))
             {
-                string endpoint = GetEndpoint(cityId, zipCode);
-                var response = await _httpClient.GetAsync(endpoint);
-                if (response.IsSuccessStatusCode)
-                {
-                    var text = await response.Content.ReadAsStringAsync();
-                    var fiveDayForecast = JsonConvert.DeserializeObject<FiveDayForecast>(text);
+                WeatherForecastModel fiveDayForecast = await GetFiveDayForecast(cityId, zipCode);
+                AveragedDayForecastModel currentForecast = await GetCurrentForecast(cityId, zipCode);
 
-                    var averagedFiveDayForecast = GetAveragedFiveDayForecast(fiveDayForecast);
+                fiveDayForecast.Forecasts.Insert(0, currentForecast);
 
-                    weatherForecast = new WeatherForecastModel()
-                    {
-                        City = fiveDayForecast.City,
-                        Forecasts = averagedFiveDayForecast
-                    };
-
-                    _cache.Set(string.Format(WeatherCache, cityId, zipCode), weatherForecast, TimeSpan.FromMinutes(10));
-                }
-                else
-                {
-                    return null;
-                }
-
+                weatherForecast = fiveDayForecast;
+                _cache.Set(string.Format(WeatherCache, cityId, zipCode), fiveDayForecast, TimeSpan.FromMinutes(10));
             }
 
             return weatherForecast;
         }
 
-        
+        private async Task<AveragedDayForecastModel> GetCurrentForecast(string cityId, string zipCode)
+        {
+            string endpoint = GetEndpoint(cityId, zipCode, "weather");
+            var response = await _httpClient.GetAsync(endpoint);
+            if (response.IsSuccessStatusCode)
+            {
+                var text = await response.Content.ReadAsStringAsync();
+                var currentWeather = JsonConvert.DeserializeObject<Forecast>(text);
+
+                return new AveragedDayForecastModel()
+                {
+                    AveragedHumidity = currentWeather.WeatherConditions.Humidity,
+                    AveragedTemperature = currentWeather.WeatherConditions.Temperature,
+                    AveragedWind = currentWeather.WindStats.Speed,
+                    Date = DateTime.Now.Date
+                };
+            }
+
+            return null;
+        }
+
+        private async Task<WeatherForecastModel> GetFiveDayForecast(string cityId, string zipCode)
+        {
+            string endpoint = GetEndpoint(cityId, zipCode, "forecast");
+            var response = await _httpClient.GetAsync(endpoint);
+            if (response.IsSuccessStatusCode)
+            {
+                var text = await response.Content.ReadAsStringAsync();
+                var fiveDayForecast = JsonConvert.DeserializeObject<FiveDayForecast>(text);
+
+                var averagedFiveDayForecast = GetAveragedFiveDayForecast(fiveDayForecast);
+
+                var weatherForecast = new WeatherForecastModel()
+                {
+                    City = fiveDayForecast.City,
+                    Forecasts = averagedFiveDayForecast
+                };
+
+                return weatherForecast;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+
         #region PrivateMethods
 
 
         private List<AveragedDayForecastModel> GetAveragedFiveDayForecast(FiveDayForecast fiveDayForecast)
         {
             var retval = new List<AveragedDayForecastModel>();
-            var daysOfForecast = fiveDayForecast.DailyForecastList.Select(x => DateTime.Parse(x.DateTimeText).Date).Distinct();
+            var daysOfForecast = fiveDayForecast.DailyForecastList.Select(x => DateTime.Parse(x.DateTimeText).Date).Distinct().Where(x => x.Date != DateTime.Now.Date);
+
             foreach (var day in daysOfForecast)
             {
                 var dayForecasts = fiveDayForecast.DailyForecastList.Where(x => DateTime.Parse(x.DateTimeText).Date == day);
@@ -121,10 +155,10 @@ namespace WeatherApp.Services
         }
 
 
-        private string GetEndpoint(string cityId, string zipCode)
+        private string GetEndpoint(string cityId, string zipCode, string apiRoute)
         {
             var apiKey = _config.Value.OpenWeatherApiKey;
-            var endpoint = $"/data/2.5/forecast?APPID={apiKey}";
+            var endpoint = $"/data/2.5/{apiRoute}?APPID={apiKey}";
 
             if (!string.IsNullOrEmpty(cityId))
             {

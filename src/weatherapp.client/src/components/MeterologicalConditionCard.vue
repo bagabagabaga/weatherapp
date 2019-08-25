@@ -4,7 +4,7 @@
       <div class="card-content">
         <div>
           <i :class="icon"></i>
-          <p>{{value.toFixed(1)}}</p>
+          <p>{{value.toFixed(1)}}{{sign}}</p>
         </div>
       </div>
     </div>
@@ -16,7 +16,8 @@ export default {
   name: "MeterologicalConditionCard",
   props: {
     icon: String,
-    value: Number
+    value: Number,
+    sign: String
   }
 };
 </script>
