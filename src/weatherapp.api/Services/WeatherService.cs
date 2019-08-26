@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
@@ -20,26 +21,27 @@ namespace WeatherApp.Services
         private IMemoryCache _cache;
         private readonly IOptions<WeatherAppConfig> _config;
         private readonly WeatherAppDbContext _dbContext;
+        private readonly ILogger<WeatherService> _logger;
 
         private string WeatherCache { get { return "_WeatherCache-CityId={0}-zipCode={1}"; } }
 
-        public WeatherService(ICitiesService citiesService, HttpClient httpClient, IOptions<WeatherAppConfig> config, IMemoryCache memoryCache, WeatherAppDbContext dbContext)
+        public WeatherService(ICitiesService citiesService, HttpClient httpClient, IOptions<WeatherAppConfig> config, IMemoryCache memoryCache, WeatherAppDbContext dbContext, ILogger<WeatherService> logger)
         {
             _citiesService = citiesService;
 
             httpClient.BaseAddress = new Uri("http://api.openweathermap.org/");
             _httpClient = httpClient;
             _config = config;
-
+            _logger = logger;
             _cache = memoryCache;
             _dbContext = dbContext;
         }
 
 
-
-
         public async Task<CityForecast> CreateCityForecast(string cityName, DateTime date, double humidity, double temperature)
         {
+            _logger.LogDebug($"Added a city={cityName} on date={date}, humidity={humidity}, temperature={temperature}");
+
             var cityForecast = new CityForecast()
             {
                 CityName = cityName,
@@ -57,6 +59,8 @@ namespace WeatherApp.Services
 
         public async Task<List<CityForecast>> GetForecastHistory()
         {
+            _logger.LogDebug("Getting history of forecasts.");
+
             var history = await _dbContext.CityForecasts.ToListAsync();
             return history;
         }
@@ -64,22 +68,33 @@ namespace WeatherApp.Services
 
         public async Task<WeatherForecastModel> GetForecast(string cityId, string zipCode)
         {
+            _logger.LogDebug($"Getting forecasts for city ID = {cityId} and zipcode = {zipCode}");
+
             //OpenWeatherMap: We recommend making calls to the API no more than one time every 10 minutes for one location
             //let's cache the response for 10 minutes
             WeatherForecastModel weatherForecast;
             if (!_cache.TryGetValue(String.Format(WeatherCache, cityId, zipCode), out weatherForecast))
             {
-                WeatherForecastModel fiveDayForecast = await GetFiveDayForecast(cityId, zipCode);
-                AveragedDayForecastModel currentForecast = await GetCurrentForecast(cityId, zipCode);
+                _logger.LogDebug($"Missing cache for city ID = {cityId} and zipcode = {zipCode}");
 
-                fiveDayForecast.Forecasts.Insert(0, currentForecast);
+                WeatherForecastModel sixDayForecast = await GetSixDayForecast(cityId, zipCode);
 
-                weatherForecast = fiveDayForecast;
-                _cache.Set(string.Format(WeatherCache, cityId, zipCode), fiveDayForecast, TimeSpan.FromMinutes(10));
+                //sometimes (after 23.00) the openweathermap api returns five next days but not today
+                //in that case we fill the today's value from another endpoint
+                if (sixDayForecast?.Forecasts.Count() < 6) { 
+                    AveragedDayForecastModel currentForecast = await GetCurrentForecast(cityId, zipCode);
+                    sixDayForecast.Forecasts.Insert(0, currentForecast);
+                }
+
+                weatherForecast = sixDayForecast;
+                _cache.Set(string.Format(WeatherCache, cityId, zipCode), sixDayForecast, TimeSpan.FromMinutes(10));
             }
 
             return weatherForecast;
         }
+
+
+        #region PrivateMethods
 
         private async Task<AveragedDayForecastModel> GetCurrentForecast(string cityId, string zipCode)
         {
@@ -102,20 +117,20 @@ namespace WeatherApp.Services
             return null;
         }
 
-        private async Task<WeatherForecastModel> GetFiveDayForecast(string cityId, string zipCode)
+        private async Task<WeatherForecastModel> GetSixDayForecast(string cityId, string zipCode)
         {
             string endpoint = GetEndpoint(cityId, zipCode, "forecast");
             var response = await _httpClient.GetAsync(endpoint);
             if (response.IsSuccessStatusCode)
             {
                 var text = await response.Content.ReadAsStringAsync();
-                var fiveDayForecast = JsonConvert.DeserializeObject<FiveDayForecast>(text);
+                var sixDayForecast = JsonConvert.DeserializeObject<SixDayForecast>(text);
 
-                var averagedFiveDayForecast = GetAveragedFiveDayForecast(fiveDayForecast);
+                var averagedFiveDayForecast = GetAveragedSixDayForecast(sixDayForecast);
 
                 var weatherForecast = new WeatherForecastModel()
                 {
-                    City = fiveDayForecast.City,
+                    City = sixDayForecast.City,
                     Forecasts = averagedFiveDayForecast
                 };
 
@@ -130,13 +145,10 @@ namespace WeatherApp.Services
         }
 
 
-        #region PrivateMethods
-
-
-        private List<AveragedDayForecastModel> GetAveragedFiveDayForecast(FiveDayForecast fiveDayForecast)
+        private List<AveragedDayForecastModel> GetAveragedSixDayForecast(SixDayForecast fiveDayForecast)
         {
             var retval = new List<AveragedDayForecastModel>();
-            var daysOfForecast = fiveDayForecast.DailyForecastList.Select(x => DateTime.Parse(x.DateTimeText).Date).Distinct().Where(x => x.Date != DateTime.Now.Date);
+            var daysOfForecast = fiveDayForecast.DailyForecastList.Select(x => DateTime.Parse(x.DateTimeText).Date).Distinct();
 
             foreach (var day in daysOfForecast)
             {

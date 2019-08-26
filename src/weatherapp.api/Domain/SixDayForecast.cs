@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WeatherApp.Domain
 {
-    public class FiveDayForecast
+    public class SixDayForecast
     {
         [JsonProperty(PropertyName = "cod")]
         public int Code { get; set; }

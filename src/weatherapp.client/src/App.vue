@@ -1,48 +1,51 @@
 <template>
-  <div class="container-fluid" id="app">
-    <div class="row p-2">
-      <div class="col-xs-12 col-md-12 col-sm-12">
-        <SearchBar
-          v-on:weatherReceived="handleWeather"
-          v-on:errorFetchingWeather="handleErrorFetchingWeather"
-        />
-        <div class="row p-4">
-          <div class="col">
-            <SwitchButton v-on:temperatureSignChanged="changeTemperatureSign" />
-          </div>
-          <div class="col">
-            <button class="btn btn-outline-light" v-on:click="toggleHistoryTab">
-              <i v-if="!isHistoryTabOpened" class="fas fa-sort-down p-1"></i>
-              <i v-if="isHistoryTabOpened" class="fas fa-sort-up p-1"></i>
-              <span>History</span>
-            </button>
-          </div>
-        </div>
-        <div v-if="weatherForecasts" class="row">
-          <div class="col">
-            <h2>{{city.name}}</h2>
-          </div>
-        </div>
-        <div class="row px-4">
-          <ForecastCard
-            class="col-xs-12 col-md-4 col-sm-6"
-            v-for="(forecast, index) in weatherForecasts"
-            v-bind:key="index"
-            v-bind:forecast="forecast"
-            v-bind:isFahrenheit="isFahrenheit"
+  <div id="app">
+    <Header />
+    <div class="container-fluid">
+      <div class="row p-2">
+        <div class="col-xs-12 col-md-12 col-sm-12">
+          <SearchBar
+            v-on:weatherReceived="handleWeather"
+            v-on:errorFetchingWeather="handleErrorFetchingWeather"
           />
-        </div>
-        <div v-if="showError" class="row p-4">
-          <h3>Error happened while fetching data. Please try later.</h3>
+          <div class="row p-4">
+            <div class="col">
+              <SwitchButton v-on:temperatureSignChanged="changeTemperatureSign" />
+            </div>
+            <div class="col">
+              <button class="btn btn-outline-light" v-on:click="toggleHistoryTab">
+                <i v-if="!isHistoryTabOpened" class="fas fa-sort-down p-1"></i>
+                <i v-if="isHistoryTabOpened" class="fas fa-sort-up p-1"></i>
+                <span>History</span>
+              </button>
+            </div>
+          </div>
+          <div v-if="!showError" class="row">
+            <div class="col">
+              <h2>{{city.name}}</h2>
+            </div>
+          </div>
+          <div class="row px-4">
+            <ForecastCard
+              class="col-xs-12 col-md-4 col-sm-6"
+              v-for="(forecast, index) in weatherForecasts"
+              v-bind:key="index"
+              v-bind:forecast="forecast"
+              v-bind:isFahrenheit="isFahrenheit"
+            />
+          </div>
+          <div v-if="showError" class="row p-4">
+            <h3>Error happened while fetching data. Please try later.</h3>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="container-fluid">
-      <Charts ref="myChart" />
-    </div>
-    <div class="container">
-      <div v-if="isHistoryTabOpened" class="col-xs-12 col-md-12 col-sm-12">
-        <HistoryTab v-bind:history="history" v-bind:isFahrenheit="isFahrenheit" />
+      <div class="container-fluid">
+        <Charts ref="myChart" />
+      </div>
+      <div class="container">
+        <div v-if="isHistoryTabOpened" class="col-xs-12 col-md-12 col-sm-12">
+          <HistoryTab v-bind:history="history" v-bind:isFahrenheit="isFahrenheit" />
+        </div>
       </div>
     </div>
   </div>
@@ -55,6 +58,7 @@ import SwitchButton from "./components/SwitchButton";
 import HistoryTab from "./components/HistoryTab";
 import WeatherService from "./services/WeatherService";
 import Charts from "./components/Charts";
+import Header from "./components/Header";
 
 export default {
   name: "app",
@@ -63,7 +67,8 @@ export default {
     SearchBar,
     ForecastCard,
     SwitchButton,
-    Charts
+    Charts,
+    Header
   },
   data() {
     return {
@@ -108,7 +113,9 @@ export default {
       );
     },
     handleErrorFetchingWeather(error) {
+      console.log(error);
       this.weatherForecasts = [];
+      this.setGraph(this.weatherForecasts);
       this.showError = true;
     },
     toggleHistoryTab() {
@@ -137,7 +144,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
-  padding: 5em;
   background-color: #343d4b;
 }
 html,

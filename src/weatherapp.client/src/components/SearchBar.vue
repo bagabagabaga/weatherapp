@@ -39,7 +39,7 @@
           <span slot="noResult">Oops! No cities found.</span>
         </multiselect>
       </div>
-      <div class="col-xs-6 col-md-6 col-sm-4">
+      <div class="col-xs-6 col-md-6 col-sm-4 p-1">
         <input
           class="form-control"
           placeholder="Postal Code"
