@@ -20,7 +20,7 @@
               </button>
             </div>
           </div>
-          <div v-if="!showError" class="row">
+          <div v-if="!errorText" class="row">
             <div class="col">
               <h2>{{city.name}}</h2>
             </div>
@@ -34,8 +34,10 @@
               v-bind:isFahrenheit="isFahrenheit"
             />
           </div>
-          <div v-if="showError" class="row p-4">
-            <h3>Error happened while fetching data. Please try later.</h3>
+          <div v-if="errorText.length>0" class="row p-4">
+            <div class="col">
+              <h3>{{errorText}}</h3>
+            </div>
           </div>
         </div>
       </div>
@@ -77,7 +79,7 @@ export default {
       items: [{ message: "Foo", id: 1 }, { message: "Bar", id: 2 }],
       isHistoryTabOpened: false,
       isFahrenheit: true,
-      showError: false,
+      errorText: "",
       history: []
     };
   },
@@ -97,7 +99,7 @@ export default {
       WeatherService.addHistory(history).then(response => this.updateHistory());
     },
     handleWeather(data) {
-      this.showError = false;
+      this.errorText = "";
       this.setWeather(data);
       this.setGraph(data.forecasts);
       this.addHistory();
@@ -116,7 +118,11 @@ export default {
       console.log(error);
       this.weatherForecasts = [];
       this.setGraph(this.weatherForecasts);
-      this.showError = true;
+      if (error.response.status == 404)
+        this.errorText = "That city was not found. Please update city details.";
+      else {
+        this.errorText = "Error happened while fetching data.";
+      }
     },
     toggleHistoryTab() {
       this.isHistoryTabOpened = !this.isHistoryTabOpened;

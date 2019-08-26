@@ -25,7 +25,7 @@ namespace WeatherApp.Controllers
       
         // GET: api/Cities?name=nameofCity
         [HttpGet]
-        public List<City> GetCities(string name, int citiesCount = 5)
+        public ActionResult<List<City>> GetCities(string name, int citiesCount = 5)
         {
             var cities =  _citiesService.GetCities(name, citiesCount);
             return cities;

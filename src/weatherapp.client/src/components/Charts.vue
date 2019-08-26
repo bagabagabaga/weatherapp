@@ -56,7 +56,7 @@ export default {
             show: false
           }
         },
-        colors: ["#222831", "#41b883"],
+        colors: ["#fff", "#41b883"],
         stroke: {
           curve: "smooth"
         },

@@ -46,7 +46,6 @@ namespace WeatherApp.Controllers
         [HttpGet("history")]
         public async Task<ActionResult<List<CityForecast>>> GetHistory()
         {
-
             var forecastHistory = await _weatherService.GetForecastHistory();
             return Ok(forecastHistory);
         }
