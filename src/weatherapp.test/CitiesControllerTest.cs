@@ -9,7 +9,7 @@ namespace WeatherApp.Test
         private readonly CitiesController _controller;
 
         [Fact]
-        public void GetCities_NameExists_ReturnsOkResult()
+        public void GetCities_NameExists_ReturnsOneCity()
         {
             var controller = new CitiesController(new FakeCitiesService());
             var result = controller.GetCities("existing");
@@ -17,7 +17,7 @@ namespace WeatherApp.Test
         }
 
         [Fact]
-        public void GetCities_NameDoesNotExists_ReturnsNotFoundResult()
+        public void GetCities_NameDoesNotExists_ReturnsEmptyList()
         {
             var controller = new CitiesController(new FakeCitiesService());
             var result = controller.GetCities("non-existing");
