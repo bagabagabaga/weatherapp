@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using WeatherApp.Data;
 using WeatherApp.Services;
 
@@ -26,7 +27,7 @@ namespace WeatherApp
 
             services.AddScoped<ICitiesService, CitiesService>();
 
-            services.AddHttpClient<IWeatherService, WeatherService>();
+            services.AddHttpClient<IWeatherService, WeatherService>(x=>x.BaseAddress = new Uri(Configuration.GetSection("WeatherAppConfig:OpenWeatherApiURL").Value));
 
             services.AddOptions();
             services.Configure<WeatherAppConfig>(Configuration.GetSection("WeatherAppConfig"));

@@ -16,7 +16,6 @@ namespace WeatherApp.Services
 {
     public class WeatherService : IWeatherService
     {
-        private ICitiesService _citiesService { get; }
         private readonly HttpClient _httpClient;
         private IMemoryCache _cache;
         private readonly IOptions<WeatherAppConfig> _config;
@@ -25,11 +24,8 @@ namespace WeatherApp.Services
 
         private string WeatherCache { get { return "_WeatherCache-CityId={0}-zipCode={1}"; } }
 
-        public WeatherService(ICitiesService citiesService, HttpClient httpClient, IOptions<WeatherAppConfig> config, IMemoryCache memoryCache, WeatherAppDbContext dbContext, ILogger<WeatherService> logger)
+        public WeatherService( HttpClient httpClient, IOptions<WeatherAppConfig> config, IMemoryCache memoryCache, WeatherAppDbContext dbContext, ILogger<WeatherService> logger)
         {
-            _citiesService = citiesService;
-
-            httpClient.BaseAddress = new Uri("http://api.openweathermap.org/");
             _httpClient = httpClient;
             _config = config;
             _logger = logger;
