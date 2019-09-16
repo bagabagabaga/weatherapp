@@ -41,5 +41,7 @@ I've deleted the JSON data I've got from Openweathermap API page for database se
 ### Todos
 
  - Write additonal tests
- - Deploy the app somewhere
 
+### Deployed App
+Keep in mind that the backend is hosted on a free heroku dyno so it's extremely slow. Be gentle.
+https://weatherappclient.milosponj.now.sh/
